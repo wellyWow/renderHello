@@ -1,9 +1,11 @@
-FROM openjdk:17-jdk-slim-buster
+FROM eclipse-temurin:17-jdk-jammy
+
 WORKDIR /app
 
-COPY app/build/lib/* build/lib/
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:resolve
 
-COPY app/build/libs/app.jar build/
+COPY src ./src
 
-WORKDIR /app/build
-ENTRYPOINT java -jar app.jar
+CMD ["./mvnw", "spring-boot:run"]
